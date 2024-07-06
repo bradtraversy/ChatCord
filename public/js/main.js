@@ -2,6 +2,8 @@ const chatForm = document.getElementById('chat-form');
 const chatMessages = document.querySelector('.chat-messages');
 const roomName = document.getElementById('room-name');
 const userList = document.getElementById('users');
+// Added user count element
+const userCount = document.getElementById('user-count');
 
 // Get username and room from URL
 const { username, room } = Qs.parse(location.search, {
@@ -17,6 +19,10 @@ socket.emit('joinRoom', { username, room });
 socket.on('roomUsers', ({ room, users }) => {
   outputRoomName(room);
   outputUsers(users);
+
+  // New functionality added showing the user count 
+  // Update user count
+  updateUserCount(users.length);
 });
 
 // Message from server
@@ -80,11 +86,15 @@ function outputUsers(users) {
   });
 }
 
+// Function to update user count in the DOM
+function updateUserCount(count) {
+  userCount.innerText = `Users in Room: ${count}`;
+}
+
 //Prompt the user before leave chat room
 document.getElementById('leave-btn').addEventListener('click', () => {
   const leaveRoom = confirm('Are you sure you want to leave the chatroom?');
   if (leaveRoom) {
     window.location = '../index.html';
-  } else {
   }
 });
